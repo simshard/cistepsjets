@@ -22,8 +22,6 @@ jobs:
          tools: composer:v2
          #coverage: none
          #extensions: 'json, dom, curl, libxml, mbstring'
-          #nova-email: ${{ secrets.NOVA_EMAIL }}
-          #nova-password: ${{ secrets.NOVA_PASSWORD }}
 
       - name: Install Laravel Pint
         run: composer global require laravel/pint

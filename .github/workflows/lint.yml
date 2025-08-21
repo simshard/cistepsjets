@@ -19,10 +19,27 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
 
+      - name: Setup cache environment
+        id: extcache
+        uses: shivammathur/cache-extensions@1.13.0
+        with:
+         php-version: '8.4'
+         extensions: 'json, dom, curl, libxml, mbstring'
+         ##${ { env.extensions }}
+         key: ext-cache-v1 #${ { env.key }}
+
+      - name: Cache extensions
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          extensions: 'json, dom, curl, libxml, mbstring'
 
       - name: Get Composer Cache Dir
         id: composer-cache-dir
@@ -32,7 +49,7 @@ jobs:
       - name: Cache Dependencies
         uses: actions/cache@v4.2.4
         with:
-          path: ${{ steps.composer-cache-dir.outputs.dir }}  
+          path: ${{ steps.composer-cache-dir.outputs.dir }}
           key: composer-cache-${{ hashFiles('**/composer.lock') }}
           restore-keys: composer-cache-keys
 
