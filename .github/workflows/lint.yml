@@ -16,6 +16,11 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
+
+    env:
+      PHP_VERSION: '8.4'
+      PHP_EXTENSIONS: 'json, dom, curl, libxml, mbstring'
+      CACHE_KEY: 'extension-cache-v1'
     steps:
       - uses: actions/checkout@v5.0.0
 
@@ -23,10 +28,9 @@ jobs:
         id: extcache
         uses: shivammathur/cache-extensions@1.13.0
         with:
-         php-version: '8.4'
-         extensions: 'json, dom, curl, libxml, mbstring'
-         ##${ { env.extensions }}
-         key: ext-cache-v1 #${ { env.key }}
+         php-version: ${{ env.PHP_VERSION }}
+         extensions: ${{ env.PHP_EXTENSIONS }}
+         key: ${{ env.CACHE_KEY }}
 
       - name: Cache extensions
         uses: actions/cache@v4
@@ -38,8 +42,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
-          extensions: 'json, dom, curl, libxml, mbstring'
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
 
       - name: Get Composer Cache Dir
         id: composer-cache-dir
