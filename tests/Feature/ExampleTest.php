@@ -1,5 +1,6 @@
 <?php
-#2nd trivial change to test CI
+
+// 2nd trivial change to test CI
 
 it('returns a successful response', function () {
     $response = $this->get('/');
