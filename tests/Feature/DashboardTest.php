@@ -9,7 +9,7 @@ test('guests are redirected to the login page', function () {
 });
 
 /**
- * Trivial Changes 
+ * Trivial Changes
  */
 test('authenticated users can visit the dashboard', function () {
     $this->actingAs($user = User::factory()->create());
