@@ -24,7 +24,7 @@ runs:
         uses: shivammathur/cache-extensions@1.13.0
         with:
          php-version: ${{ inputs.PHP_VERSION }}
-         extensions: ${{ inputs.PHP_EXTENSIONS }}
+         php-extensions: ${{ inputs.PHP_EXTENSIONS }}
          key: php-extensions-${{ steps.get-cache-hash.outputs.hash }}
 
       - name: Cache extensions
