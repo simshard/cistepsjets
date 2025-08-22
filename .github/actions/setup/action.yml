@@ -25,7 +25,7 @@ runs:
         with:
          php-version: ${{ inputs.PHP_VERSION }}
          extensions: ${{ inputs.PHP_EXTENSIONS }}
-         key: php-extensions-${{ steps.get-cache-hash.outputs.hash }}
+         key: extensions-${{ steps.get-cache-hash.outputs.hash }}
 
       - name: Cache extensions
         uses: actions/cache@v4
