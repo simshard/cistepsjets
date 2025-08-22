@@ -6,7 +6,7 @@ inputs:
   php-version:
     description: PHP version(s) to use
     required: true
-  php-extensions:
+  extensions:
     description: Comma-separated list of PHP extensions to install
     required: false
     default: 'json, dom, curl, libxml, mbstring'
@@ -24,7 +24,7 @@ runs:
         uses: shivammathur/cache-extensions@1.13.0
         with:
          php-version: ${{ inputs.PHP_VERSION }}
-         php-extensions: ${{ inputs.PHP_EXTENSIONS }}
+         extensions: ${{ inputs.PHP_EXTENSIONS }}
          key: php-extensions-${{ steps.get-cache-hash.outputs.hash }}
 
       - name: Cache extensions
@@ -38,7 +38,7 @@ runs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.PHP_VERSION }}
-          php-extensions: ${{ inputs.PHP_EXTENSIONS }}
+          extensions: ${{ inputs.PHP_EXTENSIONS }}
 
       - name: Get Composer Cache Dir
         shell: bash
