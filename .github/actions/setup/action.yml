@@ -6,7 +6,7 @@ inputs:
   php-version:
     description: PHP version(s) to use
     required: true
-  extensions:
+  php-extensions:
     description: Comma-separated list of PHP extensions to install
     required: false
     default: 'json, dom, curl, libxml, mbstring'
@@ -17,7 +17,9 @@ runs:
       - name: Get PHP extensions cache Hash
         shell: bash
         id: get-cache-hash
-        run: echo "hash=$(  'json, dom, curl, libxml, mbstring'| md5sum| awk '{print $1}')" >> $GITHUB_OUTPUT
+        with:
+          PHP_EXTENSIONS: ${{ inputs.php-extensions }}
+        run: echo "hash=$(echo $PHP_EXTENSIONS| md5sum| awk '{print $1}')" >> $GITHUB_OUTPUT
 
       - name: Setup cache environment
         id: extcache
