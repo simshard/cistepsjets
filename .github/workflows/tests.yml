@@ -30,8 +30,8 @@ jobs:
         uses: ./.github/actions/setup
         with:
           php-version: '8.3'
-          nova-email: ${{ secrets.NOVA_EMAIL }}
-          nova-password: ${{ secrets.NOVA_PASSWORD }}
+          # nova-email: ${ { secrets.NOVA_EMAIL }}
+          # nova-password: ${ { secrets.NOVA_PASSWORD }}
           coverage: xdebug
 
       - name: Install Project Dependencies
