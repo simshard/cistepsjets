@@ -17,7 +17,7 @@ runs:
       - name: Get PHP extensions cache Hash
         shell: bash
         id: get-cache-hash
-        run: echo "hash=$( '${{ inputs.php-extensions }}'| md5sum| awk '{print $1}')" >> $GITHUB_OUTPUT
+        run: echo "hash=$(  'json, dom, curl, libxml, mbstring'| md5sum| awk '{print $1}')" >> $GITHUB_OUTPUT
 
       - name: Setup cache environment
         id: extcache
