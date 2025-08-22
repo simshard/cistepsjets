@@ -1,56 +1,69 @@
 name: Setup
 
-description: setup PHP and composer
+description: Sets up PHP and Composer
 
 inputs:
   php-version:
-    description: PHP version(s) to use
+    description: The PHP version(s) you wish to use.
     required: true
   php-extensions:
-    description: Comma-separated list of PHP extensions to install
+    description: The PHP extensions you want to install.
     required: false
-    default: 'json, dom, curl, libxml, mbstring'
+    default: dom, curl, libxml, mbstring, zip, pcntl, pdo, gd, redis, igbinary, msgpack, lzf, zstd, lz4, memcached, gmp, :php-psr
+  # nova-email:
+  #   description: The email used to authenticate Nova.
+  #   required: true
+  # nova-password:
+  #   description: The password used to authenticate Nova.
+  #   required: true
+  coverage:
+    description: The coverage driver to use.
+    required: false
+    default: none
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
-      - name: Get PHP extensions cache Hash
-        shell: bash
-        id: get-cache-hash
-        run: |
-         echo hash=$(echo "${{ inputs.php-extensions}}" | md5sum | awk '{ print $1}') >> $GITHUB_OUTPUT
+    - name: Get PHP extension cache hash
+      id: get-cache-hash
+      with:
+        PHP_EXTENSIONS: ${{ inputs.php-extensions }}
+      run: echo hash=$(echo "$PHP_EXTENSIONS" | md5sum | awk '{print $1}') >> $GITHUB_OUTPUT
+      shell: bash
 
+    - name: Setup cache environment
+      id: extcache
+      uses: shivammathur/cache-extensions@v1
+      if: inputs.php-extensions == true
+      with:
+        php-version: ${{ inputs.php-version }}
+        extensions: ${{ inputs.php-extensions }}
+        key: php-extensions-${{ steps.get-cache-hash.outputs.hash }}
 
-      - name: Setup cache environment
-        id: extcache
-        uses: shivammathur/cache-extensions@1.13.0
-        with:
-         php-version: ${{ inputs.PHP_VERSION }}
-         extensions: ${{ inputs.PHP_EXTENSIONS }}
-         key: extensions-${{ steps.get-cache-hash.outputs.hash }}
+    - name: Cache extensions
+      uses: actions/cache@v4
+      if: inputs.php-extensions == true
+      with:
+        path: ${{ steps.extcache.outputs.dir }}
+        key: ${{ steps.extcache.outputs.key }}
+        restore-keys: ${{ steps.extcache.outputs.key }}
 
-      - name: Cache extensions
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.extcache.outputs.dir }}
-          key: ${{ steps.extcache.outputs.key }}
-          restore-keys: ${{ steps.extcache.outputs.key }}
+    - name: Setup PHP and Composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs.php-version }}
+        extensions: ${{ inputs.php-extensions }}
+        tools: composer:v2
+        coverage: ${{ inputs.coverage }}
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ inputs.PHP_VERSION }}
-          extensions: ${{ inputs.PHP_EXTENSIONS }}
+    - name: Get Composer cache dir
+      id: composer-cache-dir
+      run: echo dir=$(composer config cache-files-dir) >> $GITHUB_OUTPUT
+      shell: bash
 
-      - name: Get Composer Cache Dir
-        shell: bash
-        id: composer-cache-dir
-        run: echo dir=$(composer config cache-files-dir) >> $GITHUB_OUTPUT
-
-
-      - name: Cache Dependencies
-        uses: actions/cache@v4.2.4
-        with:
-          path: ${{ steps.composer-cache-dir.outputs.dir }}
-          key: composer-cache-${{ hashFiles('**/composer.lock') }}
-          restore-keys: composer-cache-keys
+    - name: Cache dependencies
+      uses: actions/cache@v4.0.2
+      with:
+        key: composer-cache-${{ hashFiles('**/composer.lock') }}
+        path: ${{ steps.composer-cache-dir.outputs.dir }}
+        restore-keys: composer-cache-
