@@ -15,8 +15,8 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Setup
-        uses: shivammathur/setup-php@v2
-        # uses: ./.github/actions/setup
+       #  uses: shivammathur/setup-php@v2
+        uses: ./.github/actions/setup
         with:
          php-version: '8.4'
          tools: composer:v2
