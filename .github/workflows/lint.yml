@@ -21,26 +21,27 @@ jobs:
     #   CACHE_KEY : ext-cache-v1
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5.0.0
+      # - name: Checkout
+      #   uses: actions/checkout@v5.0.0
 
       # - name: Setup
       #   uses: ./.github/actions/setup
       #   with:
       #     php-version: 8.4
+
       - name: Checkout Code
         uses: actions/checkout@v5.0.0
         with:
           ref: ${{ github.head_ref }}
 
       - name: Setup
-        uses: shivammathur/setup-php@v2
-        # uses: ./.github/actions/setup
+         #uses: shivammathur/setup-php@v2
+        uses: ./.github/actions/setup
         with:
          php-version: '8.4'
          tools: composer:v2
          #coverage: none
-         #extensions: 'json, dom, curl, libxml, mbstring'
+         extensions: 'json, dom, curl, libxml, mbstring'
 
       - name: Install Laravel Pint
         run: composer global require laravel/pint
