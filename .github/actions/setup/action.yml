@@ -6,10 +6,11 @@ inputs:
   php-version:
     description: The PHP version(s) you wish to use.
     required: true
+    default: '8.4'
   php-extensions:
     description: The PHP extensions you want to install.
     required: false
-    default: dom, curl, libxml, mbstring, zip, pcntl, pdo, gd, redis, igbinary, msgpack, lzf, zstd, lz4, memcached, gmp, :php-psr
+    default: 'json, dom, curl, libxml, mbstring'
 
   coverage:
     description: The coverage driver to use.
