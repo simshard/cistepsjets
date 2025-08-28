@@ -30,7 +30,7 @@ jobs:
          php-version: '8.4'
          #tools: composer:v2
          coverage: none
-         extensions: 'json, dom, curl, libxml, mbstring'
+         php-extensions: 'json, dom, curl, libxml, mbstring'
 
       - name: Install Laravel Pint
         run: composer global require laravel/pint
